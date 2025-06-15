@@ -1,0 +1,55 @@
+#!/usr/bin/env ruby
+require_relative "../app/services/upwork_api_scraper_service"
+require "telegram/bot"
+require "dotenv/load"
+require "optparse"
+
+# Parse command line options
+options = {}
+OptionParser.new do |opts|
+  opts.banner = "Usage: ruby bin/scrape_upwork [options]"
+
+  opts.on("-q", "--query QUERY", "Search query for jobs") do |q|
+    options[:query] = q
+  end
+
+  opts.on("-h", "--help", "Prints this help") do
+    puts opts
+    exit
+  end
+end.parse!
+
+puts "Starting Upwork API scraper..."
+puts "Using environment variables: #{ENV['TELEGRAM_BOT_TOKEN'] ? 'Yes' : 'No (falling back to config file)'}"
+
+# Default search terms if none provided
+if !options[:query]
+  puts "No search query specified. Using default search for 'ruby on rails'."
+  options[:query] = "ruby on rails"
+end
+
+# Create and run the scraper
+puts "Searching for: #{options[:query]}"
+scraper = UpworkApiScraperService.new(options[:query])
+
+# Scrape the data
+data = scraper.scrape
+
+if data.empty?
+  puts "No jobs found."
+  exit
+end
+
+puts "Found #{data.size} jobs:"
+data.each_with_index do |job, index|
+  puts "#{index + 1}. #{job[:title]}"
+end
+
+puts "\nSending data to Telegram..."
+result = scraper.send_to_telegram
+
+if result
+  puts "✅ All done! Check your Telegram channel for the job listings."
+else
+  puts "❌ There was an error sending to Telegram."
+end 

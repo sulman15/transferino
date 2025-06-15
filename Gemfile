@@ -25,10 +25,14 @@ gem "telegram-bot-ruby", "~> 1.0"
 gem "sidekiq", "~> 7.1"
 gem "whenever", "~> 1.0", require: false
 
+# API integrations
+gem "upwork-api", "~> 1.3"
+
 # Utilities
 gem "bootsnap", require: false
 gem "tzinfo-data", platforms: %i[ mingw mswin x64_mingw jruby ]
 gem "logger", "~> 1.7.0"
+gem "dotenv", "~> 2.8"
 
 group :development, :test do
   gem "debug", platforms: %i[ mri mingw x64_mingw ]
@@ -37,4 +41,4 @@ end
 
 group :development do
   gem "web-console"
-end 
+end

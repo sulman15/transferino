@@ -8,6 +8,7 @@ A Ruby application for scraping data from websites and sending it to Telegram ch
 - Telegram integration for sending messages to channels
 - Formatted messages with HTML styling
 - Example scraper for Hacker News
+- Upwork job scraper using Upwork API
 - Environment variables support for sensitive information
 
 ## Requirements
@@ -15,6 +16,7 @@ A Ruby application for scraping data from websites and sending it to Telegram ch
 - Ruby 3.0.7
 - Telegram Bot Token
 - Telegram Channel ID
+- Upwork API credentials (for Upwork scraper)
 
 ## Setup
 
@@ -42,12 +44,24 @@ A Ruby application for scraping data from websites and sending it to Telegram ch
      TELEGRAM_CHANNEL_ID=your_telegram_channel_id_here
      ```
 
-4. Test the Telegram integration:
+4. For Upwork job scraping:
+   - Register as a developer at https://www.upwork.com/services/api/apply
+   - Get your API credentials and add them to `.env`:
+     ```
+     UPWORK_CONSUMER_KEY=your_upwork_consumer_key
+     UPWORK_CONSUMER_SECRET=your_upwork_consumer_secret
+     UPWORK_ACCESS_TOKEN=your_upwork_access_token
+     UPWORK_ACCESS_SECRET=your_upwork_access_secret
+     ```
+
+5. Test the Telegram integration:
    ```
    ruby bin/simple_telegram_test
    ```
 
-## Running the Scraper
+## Running the Scrapers
+
+### Hacker News Scraper
 
 To run the example Hacker News scraper:
 
@@ -55,20 +69,25 @@ To run the example Hacker News scraper:
 ruby bin/run_scraper
 ```
 
-This will:
-1. Scrape the top 10 posts from Hacker News
-2. Format them as messages with titles, points, authors, and links
-3. Send them to your configured Telegram channel
+### Upwork Jobs Scraper
+
+To run the Upwork jobs scraper:
+
+```
+ruby bin/scrape_upwork --query "ruby on rails"
+```
+
+You can specify a different search query:
+
+```
+ruby bin/scrape_upwork --query "python django"
+```
 
 ## Creating a Custom Scraper
 
 To create a scraper for a different website:
 
-1. Copy the example scraper as a starting point:
-   ```
-   cp app/services/example_scraper_service.rb app/services/your_custom_scraper.rb
-   ```
-
+1. Copy one of the example scrapers as a starting point
 2. Modify the `parse_document` method to extract data from your target website
 3. Adjust the `format_message` method if needed
 4. Update the URL in the `initialize` method
