@@ -1,0 +1,17 @@
+development:
+  # Replace with your bot token from BotFather
+  bot_token: "7690648540:AAEosZGF7z6Q2QnWKunGwjN7MyalvLKxxK0"
+  # For public channels: use the username with @ (e.g. "@yourchannel")
+  # For private channels: use the channel ID (e.g. "-1001234567890")
+  # To get private channel ID:
+  # 1. Add @getidsbot to your channel
+  # 2. Or visit: https://api.telegram.org/bot[YOUR_BOT_TOKEN]/getUpdates after sending a message to the channel
+  channel_id: "-1002721647925"
+
+test:
+  bot_token: "7690648540:AAEosZGF7z6Q2QnWKunGwjN7MyalvLKxxK0"
+  channel_id: "-1002721647925"
+
+production:
+  bot_token: <%= ENV["TELEGRAM_BOT_TOKEN"] %>
+  channel_id: <%= ENV["TELEGRAM_CHANNEL_ID"] %> 

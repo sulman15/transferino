@@ -1,0 +1,20 @@
+#!/usr/bin/env ruby
+require_relative "../config/environment"
+
+puts "Testing Telegram integration..."
+puts "Using bot token: #{ENV['TELEGRAM_BOT_TOKEN'] || 'Not set in environment (using config file)'}"
+puts "Using channel ID: #{ENV['TELEGRAM_CHANNEL_ID'] || 'Not set in environment (using config file)'}"
+
+telegram = TelegramService.new
+result = telegram.send_message("Test message from Transferino app at #{Time.now.strftime('%Y-%m-%d %H:%M:%S')}")
+
+if result
+  puts "✅ Message sent successfully! Check your Telegram channel."
+else
+  puts "❌ Failed to send message. Check your bot token and channel ID."
+  puts "Make sure you have:"
+  puts "1. Created a bot with BotFather and have the token"
+  puts "2. Created a Telegram channel"
+  puts "3. Added your bot to the channel as an administrator"
+  puts "4. Updated config/telegram.yml with the correct token and channel ID"
+end 

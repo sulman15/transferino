@@ -1,0 +1,44 @@
+#!/usr/bin/env ruby
+require "httparty"
+
+# Get the bot token from the config file
+require "yaml"
+config_file = File.join(File.dirname(__FILE__), "..", "config", "telegram.yml")
+config = YAML.load_file(config_file)["development"]
+bot_token = config["bot_token"]
+
+puts "Fetching updates for bot with token: #{bot_token}"
+puts "Make sure you have:"
+puts "1. Created a Telegram channel"
+puts "2. Added your bot to the channel as an administrator"
+puts "3. Sent at least one message to the channel"
+puts "\nAttempting to get updates from Telegram API..."
+
+url = "https://api.telegram.org/bot#{bot_token}/getUpdates"
+response = HTTParty.get(url)
+
+if response.success?
+  data = response.parsed_response
+  
+  if data["ok"] && data["result"].any?
+    puts "\n✅ Success! Found updates."
+    puts "\nPossible channel IDs found:"
+    
+    data["result"].each do |update|
+      if update["channel_post"]
+        chat = update["channel_post"]["chat"]
+        puts "Channel: #{chat['title']} - ID: #{chat['id']}"
+      end
+    end
+    
+    puts "\nIf you don't see your channel above, try sending a new message to the channel and run this script again."
+  else
+    puts "\n❌ No updates found. Make sure:"
+    puts "1. Your bot is added to the channel as an administrator"
+    puts "2. You've sent at least one message to the channel recently"
+    puts "3. Try sending a new message to the channel and run this script again"
+  end
+else
+  puts "\n❌ Failed to get updates. Error: #{response.code} #{response.message}"
+  puts "Check if your bot token is correct."
+end 

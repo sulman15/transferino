@@ -1,0 +1,44 @@
+#!/usr/bin/env ruby
+require "telegram/bot"
+require "yaml"
+
+# Load configuration from YAML file
+config_file = File.join(File.dirname(__FILE__), "..", "config", "telegram.yml")
+config = YAML.load_file(config_file)["development"]
+
+bot_token = config["bot_token"]
+channel_id = config["channel_id"]
+
+puts "Testing Telegram integration with:"
+puts "Bot token: #{bot_token}"
+puts "Channel ID: #{channel_id}"
+
+# Create a formatted message
+title = "Test Article"
+summary = "This is a test summary of an article that would be scraped from a website."
+link = "https://example.com/article"
+published_at = Time.now.strftime("%Y-%m-%d %H:%M")
+
+message = ""
+message += "<b>#{title}</b>\n\n"
+message += "#{summary}\n\n"
+message += "Published: #{published_at}\n"
+message += "<a href='#{link}'>Read more</a>"
+
+puts "\nSending message: #{message}"
+
+begin
+  Telegram::Bot::Client.run(bot_token) do |bot|
+    response = bot.api.send_message(
+      chat_id: channel_id,
+      text: message,
+      parse_mode: "HTML"
+    )
+    
+    puts "\n✅ Message sent successfully!"
+    puts "Response: #{response.inspect}"
+  end
+rescue => e
+  puts "\n❌ Error: #{e.message}"
+  puts e.backtrace.join("\n")
+end 

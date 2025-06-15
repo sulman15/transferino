@@ -1,0 +1,31 @@
+#!/usr/bin/env ruby
+require_relative "../app/services/example_scraper_service"
+require "telegram/bot"
+
+puts "Starting scraper..."
+
+# Create and run the scraper
+scraper = ExampleScraperService.new
+puts "Scraping data from #{scraper.url}..."
+
+# Scrape the data
+data = scraper.scrape
+
+if data.empty?
+  puts "No data found."
+  exit
+end
+
+puts "Found #{data.size} items:"
+data.each_with_index do |item, index|
+  puts "#{index + 1}. #{item[:title]}"
+end
+
+puts "\nSending data to Telegram..."
+result = scraper.send_to_telegram
+
+if result
+  puts "✅ All done! Check your Telegram channel for the messages."
+else
+  puts "❌ There was an error sending to Telegram."
+end 

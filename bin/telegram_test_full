@@ -1,0 +1,30 @@
+#!/usr/bin/env ruby
+require_relative "../config/environment"
+
+puts "Testing full TelegramService integration..."
+
+# Create a test message
+test_data = {
+  title: "Test Article",
+  summary: "This is a test summary of an article that would be scraped from a website.",
+  link: "https://example.com/article",
+  published_at: Time.now.strftime("%Y-%m-%d %H:%M")
+}
+
+begin
+  telegram = TelegramService.new
+  
+  # Format and send the message
+  message = telegram.format_news_message(test_data)
+  result = telegram.send_message(message)
+  
+  if result
+    puts "✅ Message sent successfully! Check your Telegram channel."
+    puts "Message content: #{message}"
+  else
+    puts "❌ Failed to send message."
+  end
+rescue => e
+  puts "❌ Error: #{e.message}"
+  puts e.backtrace.join("\n")
+end 

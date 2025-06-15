@@ -1,0 +1,22 @@
+default: &default
+  adapter: mysql2
+  encoding: utf8mb4
+  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+  username: root
+  password:
+  socket: /tmp/mysql.sock
+
+development:
+  <<: *default
+  database: transferino_development
+
+test:
+  <<: *default
+  database: transferino_test
+
+production:
+  <<: *default
+  database: transferino_production
+  username: <%= ENV["TRANSFERINO_DATABASE_USERNAME"] %>
+  password: <%= ENV["TRANSFERINO_DATABASE_PASSWORD"] %>
+  host: <%= ENV["TRANSFERINO_DATABASE_HOST"] %> 
