@@ -1,17 +1,26 @@
 #!/usr/bin/env ruby
 require "telegram/bot"
 require "yaml"
+require "dotenv/load" # Load environment variables from .env file
 
-# Load configuration from YAML file
-config_file = File.join(File.dirname(__FILE__), "..", "config", "telegram.yml")
-config = YAML.load_file(config_file)["development"]
+# First try to get token and channel ID from environment variables
+bot_token = ENV["TELEGRAM_BOT_TOKEN"]
+channel_id = ENV["TELEGRAM_CHANNEL_ID"]
 
-bot_token = config["bot_token"]
-channel_id = config["channel_id"]
+# Fall back to config file if environment variables are not set
+if bot_token.nil? || channel_id.nil?
+  # Load configuration from YAML file
+  config_file = File.join(File.dirname(__FILE__), "..", "config", "telegram.yml")
+  config = YAML.load_file(config_file)["development"]
+  
+  bot_token ||= config["bot_token"]
+  channel_id ||= config["channel_id"]
+end
 
 puts "Testing Telegram integration with:"
 puts "Bot token: #{bot_token}"
 puts "Channel ID: #{channel_id}"
+puts "Source: #{ENV['TELEGRAM_BOT_TOKEN'] ? '.env file' : 'config/telegram.yml'}"
 
 # Create a formatted message
 title = "Test Article"

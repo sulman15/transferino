@@ -13,9 +13,12 @@
 .sass-cache/
 /public/assets/
 
-# Ignore environment files
+# Ignore environment files but keep the sample
 .env
-.env.*
+.env.local
+.env.*.local
+!.env.sample
+!.env.example
 
 # Ignore database configuration
 /config/database.yml

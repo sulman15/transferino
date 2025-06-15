@@ -1,12 +1,20 @@
 require "telegram/bot"
+require "dotenv/load" # Load environment variables from .env file
 
 class TelegramService
   attr_reader :token, :channel_id
 
   def initialize
-    config = YAML.load_file(Rails.root.join("config", "telegram.yml"))[Rails.env]
-    @token = config["bot_token"]
-    @channel_id = config["channel_id"]
+    # First try to load from environment variables
+    @token = ENV["TELEGRAM_BOT_TOKEN"]
+    @channel_id = ENV["TELEGRAM_CHANNEL_ID"]
+    
+    # Fall back to config file if environment variables are not set
+    if @token.nil? || @channel_id.nil?
+      config = YAML.load_file(Rails.root.join("config", "telegram.yml"))[Rails.env]
+      @token ||= config["bot_token"]
+      @channel_id ||= config["channel_id"]
+    end
   end
 
   def send_message(text)

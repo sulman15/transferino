@@ -1,6 +1,7 @@
 require "nokogiri"
 require "httparty"
 require "yaml"
+require "dotenv/load" # Load environment variables from .env file
 
 class ExampleScraperService
   attr_reader :url, :parsed_data
@@ -30,12 +31,19 @@ class ExampleScraperService
     return if @parsed_data.empty?
     
     begin
-      # Load configuration from YAML file
-      config_file = File.join(File.dirname(__FILE__), "..", "..", "config", "telegram.yml")
-      config = YAML.load_file(config_file)["development"]
+      # Get token and channel ID from environment variables
+      bot_token = ENV["TELEGRAM_BOT_TOKEN"]
+      channel_id = ENV["TELEGRAM_CHANNEL_ID"]
       
-      bot_token = config["bot_token"]
-      channel_id = config["channel_id"]
+      # Fall back to config file if environment variables are not set
+      if bot_token.nil? || channel_id.nil?
+        # Load configuration from YAML file
+        config_file = File.join(File.dirname(__FILE__), "..", "..", "config", "telegram.yml")
+        config = YAML.load_file(config_file)["development"]
+        
+        bot_token ||= config["bot_token"]
+        channel_id ||= config["channel_id"]
+      end
       
       # Send each item to Telegram
       @parsed_data.each do |item|

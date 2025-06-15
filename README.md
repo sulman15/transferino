@@ -8,6 +8,7 @@ A Ruby application for scraping data from websites and sending it to Telegram ch
 - Telegram integration for sending messages to channels
 - Formatted messages with HTML styling
 - Example scraper for Hacker News
+- Environment variables support for sensitive information
 
 ## Requirements
 
@@ -30,9 +31,16 @@ A Ruby application for scraping data from websites and sending it to Telegram ch
 
 3. Configure your Telegram bot:
    - Create a bot using BotFather on Telegram
-   - Update the bot token in `config/telegram.yml`
    - Create a Telegram channel and add your bot as an administrator
-   - Update the channel ID in `config/telegram.yml`
+   - Copy `.env.sample` to `.env` and update with your credentials:
+     ```
+     cp .env.sample .env
+     ```
+   - Edit `.env` with your bot token and channel ID:
+     ```
+     TELEGRAM_BOT_TOKEN=your_telegram_bot_token_here
+     TELEGRAM_CHANNEL_ID=your_telegram_channel_id_here
+     ```
 
 4. Test the Telegram integration:
    ```
@@ -77,6 +85,11 @@ For scheduled scraping, you can:
 - `app/services/` - Contains the scraper services
 - `bin/` - Scripts for running and testing
 - `config/` - Configuration files
+- `.env` - Environment variables for sensitive information
+
+## Security
+
+Sensitive information like API tokens and channel IDs should be stored in the `.env` file, which is excluded from Git. Never commit your actual tokens to the repository.
 
 ## Contributing
 

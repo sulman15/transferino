@@ -1,8 +1,10 @@
 #!/usr/bin/env ruby
 require_relative "../app/services/example_scraper_service"
 require "telegram/bot"
+require "dotenv/load" # Load environment variables from .env file
 
 puts "Starting scraper..."
+puts "Using environment variables: #{ENV['TELEGRAM_BOT_TOKEN'] ? 'Yes' : 'No (falling back to config file)'}"
 
 # Create and run the scraper
 scraper = ExampleScraperService.new
